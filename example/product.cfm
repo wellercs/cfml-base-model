@@ -1,7 +1,7 @@
 <!--- This would normally go in a controller in an MVC application, but this is just a quick example. --->
 <cfscript>
 	ProductBean = new ProductBean();
-	ProductBean.load();
+	ProductBean.load( method="getProducts", args={} );
 </cfscript>
 
 <!--- This would go in an external stylesheet. --->
