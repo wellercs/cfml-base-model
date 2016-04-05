@@ -44,14 +44,20 @@
 	public any function load( required string method, struct args = {} ) {
 		variables._resetBean( true );
 		variables.data = { };
-		if ( structKeyExists(variables.svc, arguments.method) ) {
+
+		if ( structKeyExists(variables, "svc") AND structKeyExists(variables.svc, arguments.method) ) {
 			local.dataToLoad = invoke(variables.svc, arguments.method, arguments.args);
-		}
-		else {
+		} else {
 			local.dataToLoad = invoke(variables.dao, arguments.method, arguments.args);
 		}
-		structAppend( variables.data, local.dataToLoad );
-		variables.loaded = true;
+
+		if ( isValid("struct", local.dataToLoad) ) {
+			structAppend( variables.data, local.dataToLoad );
+			variables.loaded = true;
+		} else if ( isValid("array", local.dataToLoad) ) {
+			attach( local.dataToLoad );
+		}
+
 		return this;
 	}
 
