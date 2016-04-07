@@ -1,16 +1,15 @@
 component accessors="true" {
 
+	property DataMapper;
 	property ProductService;
 
 	function init( fw ) {
 		variables.fw = fw;
+		return this;
 	}
 
 	function list( struct rc ) {
-		writedump(variables.ProductService); abort;
-
-		//local.user = datamapper.create( "user" ).load( userid );
-		//local.things = datamapper.createIterator( name = "thing", sql "select * from thing where some set of conditions" );		
+		rc.ProductBean = variables.DataMapper.createIterator( name = "ProductBean", data = variables.ProductService.getProducts() );	
 	}
 
 }

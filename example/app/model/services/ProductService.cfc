@@ -1,8 +1,14 @@
-﻿component extends="BaseService"{
+﻿component extends="model.services.BaseService" accessors="true" {
 
-	ProductService function init(){
+	property ProductDAO;
+
+	public ProductService function init() {
 		super.init();
 		return this;
+	}
+
+	public array function getProducts() {
+		return variables.ProductDAO.getProducts();
 	}
 
 }

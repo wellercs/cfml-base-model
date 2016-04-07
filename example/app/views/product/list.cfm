@@ -34,13 +34,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				<cfloop condition="#ProductBean.next()#">
+				<cfloop condition="#rc.ProductBean.next()#">
 					<tr>
-						<td>#ProductBean.get('label')#</td>
-						<td>#ProductBean.get('description')#</td>
-						<td>#ProductBean.get('dummy')#</td>
-						<td>#dollarFormat(ProductBean.get('retailPrice'))#</td>
-						<td>#dollarFormat(ProductBean.get('promoPrice'))#</td>				
+						<td>#rc.ProductBean.get('label')#</td>
+						<td>#rc.ProductBean.get('description')#</td>
+						<td>#rc.ProductBean.get('dummy')#</td>
+						<td>#dollarFormat(rc.ProductBean.get('retailPrice'))#</td>
+						<td>#dollarFormat(rc.ProductBean.get('promoPrice'))#</td>				
 					</tr>
 				</cfloop>
 			</tbody>

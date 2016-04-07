@@ -1,6 +1,6 @@
-﻿component {
+﻿component accessors="true" {
 
-	ProductDAO function init(){
+	public ProductDAO function init() {
 		return this;
 	}
 

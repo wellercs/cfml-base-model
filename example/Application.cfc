@@ -10,7 +10,8 @@
 
     // set up per-application mappings as needed:
     this.mappings[ '/framework' ] = getDirectoryFromPath( getBaseTemplatePath() ) & 'framework';
-    // this.mappings[ '/app' ] expandPath( '../path/to/app' );
+    this.mappings[ '/app' ] = expandPath( './app' );
+    this.mappings[ '/model' ] = expandPath( '../model' );
 
     function _get_framework_one() {
         if ( !structKeyExists( request, '_framework_one' ) ) {
@@ -20,12 +21,12 @@
                 base = '/app',
                 diOverrideAllowed = false,
                 diEngine = "custom", // none, di1, aop1, wirebox, custom
-                diLocations = "controllers, model",
+                diLocations = "/app/controllers, /app/model, /model",
                 diConfig = {
                     omitDirectoryAliases : true
                 },
                 diComponent = "framework.ioc",
-                trace = true
+                trace = false
             });
 
             // if you need to override extension points, use

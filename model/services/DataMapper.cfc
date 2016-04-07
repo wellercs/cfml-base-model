@@ -1,8 +1,8 @@
-﻿component{
+﻿component {
 
-	BaseService function init(){
-		// variables.beanMapping = "models.beans";
-		variables.beanMapping = "example.models.beans";
+	public DataMapper function init() {
+		// variables.beanMapping = "model.beans";
+		variables.beanMapping = "app.model.beans";
 		variables.beanPath = expandPath( "/" & replace( variables.beanMapping, ".", "/", "all" ) );
 		variables.beanCache = { };
 		variables.cfcExists = { };

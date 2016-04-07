@@ -1,6 +1,7 @@
-﻿component accessors="false"{
+﻿component accessors="false" {
 
-	BaseBean function init(){
+	public BaseBean function init() {
+		variables.iterator = false;
 		variables._resetBean( false );
 		return this;
 	}
@@ -41,23 +42,10 @@
 		return structKeyExists( variables.dirty, arguments.propertyName ) || structKeyExists( variables.data, arguments.propertyName );
 	}
 
-	public any function load( required string method, struct args = {} ) {
+	public any function load( struct dataToLoad ) {
 		variables._resetBean( true );
 		variables.data = { };
-
-		if ( structKeyExists(variables, "svc") AND structKeyExists(variables.svc, arguments.method) ) {
-			local.dataToLoad = invoke(variables.svc, arguments.method, arguments.args);
-		} else {
-			local.dataToLoad = invoke(variables.dao, arguments.method, arguments.args);
-		}
-
-		if ( isValid("struct", local.dataToLoad) ) {
-			structAppend( variables.data, local.dataToLoad );
-			variables.loaded = true;
-		} else if ( isValid("array", local.dataToLoad) ) {
-			attach( local.dataToLoad );
-		}
-
+		structAppend( variables.data, arguments.dataToLoad );
 		return this;
 	}
 
@@ -113,6 +101,7 @@
 		variables.resultSet = arguments.resultSet;
 		variables.size = arrayLen( variables.resultSet );
 		variables.index = 0;
+		variables.iterator = true;
 		return this;
 	}
 
@@ -130,7 +119,6 @@
 		variables._resetBean( true );
 		variables.data = { };
 		structAppend( variables.data, variables.resultSet[ variables.index ] );
-		variables.loaded = true;
 	}
 
 	/**

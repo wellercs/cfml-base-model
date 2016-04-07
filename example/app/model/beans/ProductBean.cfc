@@ -1,8 +1,7 @@
-﻿component extends="BaseBean" accessors="false"{
+﻿component extends="model.beans.BaseBean" accessors="false" {
 
-	ProductBean function init(){
+	public ProductBean function init() {
 		super.init();
-		//variables.dao = new ProductDAO(); // normally the dependency objects (in this case the DAO) would be injected by a DI engine
 		return this;
 	}
 
