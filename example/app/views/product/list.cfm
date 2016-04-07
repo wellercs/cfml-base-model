@@ -1,36 +1,29 @@
-<!--- This would normally go in a controller in an MVC application, but this is just a quick example. --->
-<cfscript>
-	ProductBean = new ProductBean();
-	ProductBean.load( method="getProducts", args={} );
-</cfscript>
-
-<!--- This would go in an external stylesheet. --->
+<!--- This should go in an external stylesheet. --->
 <style>
-	table {
+	#tblProducts {
 		width: 100%;
 	}
 
-	th {
+	#tblProducts th {
 		background-color: #4CAF50;
 		color: white;
 		height: 50px;
 	}
 
-	th, td {
+	#tblProducts th, td {
 		border-bottom: 1px solid #ddd;
 		padding: 15px;
 		text-align: left;
 	}
 
-	tr:nth-child(even) {background-color: #f2f2f2;}
+	#tblProducts tr:nth-child(even) {background-color: #f2f2f2;}
 
-	tr:hover {background-color: yellow;}
+	#tblProducts tr:hover {background-color: yellow;}
 </style>
 
-<!--- This would go in a view in an MVC application. --->
 <cfoutput>
 	<div style="overflow-x:auto;">
-		<table>
+		<table id="tblProducts">
 			<thead>
 				<tr>
 					<th>Label</th>
