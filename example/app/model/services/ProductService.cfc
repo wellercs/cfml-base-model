@@ -3,7 +3,7 @@
 	property ProductDAO;
 
 	public ProductService function init() {
-		super.init();
+		super.init( argumentCollection = arguments );
 		return this;
 	}
 
