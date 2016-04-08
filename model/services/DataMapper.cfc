@@ -1,7 +1,9 @@
-﻿component {
+﻿component accessors="true" {
+
+	property beanFactory;
 
 	public DataMapper function init() {
-		// variables.beanMapping = "model.beans";
+		variables.beanCoreMapping = "model.beans";
 		variables.beanMapping = "app.model.beans";
 		variables.beanPath = expandPath( "/" & replace( variables.beanMapping, ".", "/", "all" ) );
 		variables.beanCache = { };
@@ -10,20 +12,38 @@
 	}
 
 	// supports any factory that uses getBean()
-	public void function setBeanFactory( any factory ) {
-		variables.beanFactory = arguments.factory;
-	}
+	// public void function setBeanFactory( any factory ) {
+	// 	variables.beanFactory = arguments.factory;
+	// }
 	
 	public any function create( string name ) {
+		local.daoName = replaceNoCase(arguments.name, "Bean", "DAO", "one");
+		local.serviceName = replaceNoCase(arguments.name, "Bean", "Service", "one");
+
+		// TODO: using missingBean()
+		if ( variables.beanFactory.containsBean( local.daoName ) ) {
+			local.DataAccessObject = variables.beanFactory.getBean( local.daoName );
+		} else {
+			local.DataAccessObject = variables.beanFactory.getBean( "BaseDAO" );
+		}
+
+		// TODO: using missingBean()
+		if ( variables.beanFactory.containsBean( local.serviceName ) ) {
+			local.ServiceObject = variables.beanFactory.getBean( local.serviceName );
+		} else {
+			local.ServiceObject = variables.beanFactory.getBean( "BaseService" );
+		}
+
 		if ( !structKeyExists( variables.cfcExists, arguments.name ) ) {
 			// just in case we're passed a dotted name, look for a bean in a subfolder:
-			local.filePath = variables.beanPath & "/" & replace( arguments.name, ".", "/", "all" ) & ".cfc";
-			variables.cfcExists[ arguments.name ] = fileExists( local.filePath );
+			local.beanFilePath = variables.beanPath & "/" & replace( arguments.name, ".", "/", "all" ) & ".cfc";
+			variables.cfcExists[ arguments.name ] = fileExists( local.beanFilePath );
 		}
+		
 		if ( variables.cfcExists[ arguments.name ] ) {
-			return new "#variables.beanMapping#.#arguments.name#"( arguments.name, this );
+			return new "#variables.beanMapping#.#arguments.name#"( name = arguments.name, dao = local.DataAccessObject, datamapper = this, svc = local.ServiceObject );
 		} else {
-			return new "#variables.beanMapping#.BaseBean"( arguments.name, this );
+			return new "#variables.beanCoreMapping#.BaseBean"( name = arguments.name, dao = local.DataAccessObject, datamapper = this, svc = local.ServiceObject );
 		}
 	}	
 	
