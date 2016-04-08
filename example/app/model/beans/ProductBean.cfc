@@ -1,7 +1,8 @@
-﻿component extends="model.beans.BaseBean" accessors="false" {
+﻿component extends="model.beans.BaseBean" accessors="true" {
 
 	public ProductBean function init() {
-		super.init();
+		variables.dependencies = "Utilities";
+		super.init( argumentCollection = arguments );
 		return this;
 	}
 
