@@ -1,7 +1,6 @@
 ﻿component accessors="true" {
 
 	/* TODO
-		load by couchbase
 		delete
 		save
 	*/
