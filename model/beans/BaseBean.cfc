@@ -1,9 +1,48 @@
-﻿component accessors="false" {
+﻿component accessors="true" {
 
-	public BaseBean function init() {
+	public BaseBean function init( string name, any dao, any datamapper, any svc ) {
+		variables.name = arguments.name;
+		variables.dao = arguments.dao;
+		variables.datamapper = arguments.datamapper;
+		variables.svc = arguments.svc;
 		variables.iterator = false;
 		variables._resetBean( false );
+		// use the ORM to autowire myself:
+		if ( structKeyExists( variables, "dependencies" ) ) {
+			var services = listToArray( variables.dependencies );
+			for ( var svc in services ) {
+				variables.datamapper.injectBean( trim( svc ), variables );
+			}
+		}
 		return this;
+	}
+
+	// DATA ACCESS METHODS
+
+	public any function getByID( string name, any id ) {
+		if ( structKeyExists(variables.svc, getFunctionCalledName()) ) {
+			return invoke(variables.svc, getFunctionCalledName(), arguments);
+		} else {
+			return invoke(variables.dao, getFunctionCalledName(), arguments);
+		}
+	}
+
+	public any function findByKeys( string name = variables.name, struct args = {}, string format = "arrayOfStructs", array orderBy = [] ) {
+		// somehow losing arguments after invoke
+		local.myArgs = {};
+		structAppend( local.myArgs, arguments );
+
+		if ( structKeyExists(variables.svc, getFunctionCalledName()) ) {
+			local.result = invoke(variables.svc, getFunctionCalledName(), arguments);
+		} else {
+			local.result = invoke(variables.dao, getFunctionCalledName(), arguments);
+		}
+
+		if ( local.myArgs.format IS "iterator" ) {
+			local.result = variables.datamapper.createIterator( name = local.myArgs.name, data = local.result );
+		}
+
+		return local.result;
 	}
 
 	// STANDARD BEAN METHODS
@@ -42,10 +81,26 @@
 		return structKeyExists( variables.dirty, arguments.propertyName ) || structKeyExists( variables.data, arguments.propertyName );
 	}
 
-	public any function load( struct dataToLoad ) {
+	public any function load( any id ) {
 		variables._resetBean( true );
 		variables.data = { };
-		structAppend( variables.data, arguments.dataToLoad );
+		structAppend( variables.data, this.getByID( name = variables.name, id = arguments.id ) );
+		return this;
+	}
+
+	public any function loadByKeys() {
+		local.args = { };
+		structAppend( local.args, arguments );
+		variables._resetBean( true );
+		variables.data = { };
+		local.matches = this.findByKeys( name = variables.name, args = local.args );
+		if ( arrayLen( local.matches ) ) {
+			structAppend( variables.data, local.matches[1] );
+		} else {
+			// if there's no match, prepopulate the dirty fields with the keys:
+			structAppend( variables.dirty, local.args );
+			variables.isDirty = true;
+		}
 		return this;
 	}
 
@@ -72,6 +127,10 @@
 		return this;
 	}
 
+	public string function type() {
+		return variables.name;
+	}
+
 	public struct function getData() {
 		return { "data" = variables.data, "dirty" = variables.dirty };
 	}
@@ -96,7 +155,9 @@
 
 	// IBO loop example: while ( bean.next() ) { bean.get("propertyName"); }
 
-	// this turns me into an iterator:
+	/**
+	* @hint Turns me into an iterator.
+	*/
 	public any function attach( any resultSet ) {
 		variables.resultSet = arguments.resultSet;
 		variables.size = arrayLen( variables.resultSet );
@@ -119,6 +180,13 @@
 		variables._resetBean( true );
 		variables.data = { };
 		structAppend( variables.data, variables.resultSet[ variables.index ] );
+	}
+
+	/**
+	* @hint Returns the resultset.
+	*/
+	public array function getResultSet() {
+		return variables.resultSet;
 	}
 
 	/**
