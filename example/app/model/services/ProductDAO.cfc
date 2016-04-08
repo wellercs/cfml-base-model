@@ -1,6 +1,7 @@
-﻿component accessors="true" {
+﻿component extends="model.services.BaseDAO" accessors="true" {
 
 	public ProductDAO function init() {
+		super.init( argumentCollection = arguments );
 		return this;
 	}
 
