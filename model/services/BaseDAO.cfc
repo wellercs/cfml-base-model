@@ -72,7 +72,7 @@
 		}
 		sproc.addProcResult(name="results");
 		results = sproc.execute().getProcResultSets().results;
-		return datamapper.queryToResultSet( results );
+		return variables.datamapper.queryToResultSet( results );
 	}
 
 }
