@@ -25,61 +25,8 @@
                 diEngine = "custom", // none, di1, aop1, wirebox, custom
                 diLocations = "/app/controllers, /app/model, /model",
                 diConfig = {
-                    constants = {
-                        orm = {
-                            product = {
-                                getByID = {
-                                    MSSQL = {
-                                        sp = "pr_product_sel",
-                                        params = [
-                                            {
-                                                paramName = "id",
-                                                paramType = "in",
-                                                dataType = "integer"
-                                            }
-                                        ],
-                                        options = {
-                                            datasource = "mydsn"
-                                        }
-                                    },
-                                    _NOSQL_ = {
-                                        mapping = "redis",
-                                        options = {
-                                            bucket = "enterprise",
-                                            key = "product:{1}",
-                                            expiration = 60
-                                        }
-                                    }
-                                },
-                                findByKeys = {
-                                    MSSQL = {
-                                        sp = "pr_product_by_type_lst",
-                                        params = [
-                                            {
-                                                paramName = "store_group_id",
-                                                paramType = "in",
-                                                dataType = "integer"
-                                            },
-                                            {
-                                                paramName = "product_type_id",
-                                                paramType = "in",
-                                                dataType = "integer"
-                                            },
-                                            {
-                                                paramName = "label",
-                                                paramType = "in",
-                                                dataType = "varchar"
-                                            }
-                                        ],
-                                        options = {
-                                            datasource = "mydsn"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    omitDirectoryAliases : true
+                    loadListener = "LoadListener",
+                    omitDirectoryAliases = true
                 },
                 diComponent = "framework.ioc",
                 trace = false
