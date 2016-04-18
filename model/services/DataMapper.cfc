@@ -20,14 +20,14 @@
 		local.daoName = replaceNoCase(arguments.name, "Bean", "DAO", "one");
 		local.serviceName = replaceNoCase(arguments.name, "Bean", "Service", "one");
 
-		// TODO: using missingBean()
+		// TODO: use missingBean()
 		if ( variables.beanFactory.containsBean( local.daoName ) ) {
 			local.DataAccessObject = variables.beanFactory.getBean( local.daoName );
 		} else {
 			local.DataAccessObject = variables.beanFactory.getBean( "BaseDAO" );
 		}
 
-		// TODO: using missingBean()
+		// TODO: use missingBean()
 		if ( variables.beanFactory.containsBean( local.serviceName ) ) {
 			local.ServiceObject = variables.beanFactory.getBean( local.serviceName );
 		} else {
