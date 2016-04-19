@@ -1,6 +1,7 @@
 ﻿component accessors="true" {
 
 	property beanFactory;
+	property baseDAO;
 
 	public DataMapper function init() {
 		variables.beanCoreMapping = "model.beans";
@@ -47,10 +48,25 @@
 		}
 	}	
 	
-	public any function createIterator( string name, any data = [] ) {
+	public any function createIterator( string name, any data = [], string method = "", struct args = {} ) {
 		local.bean = this.create( arguments.name );
-		local.bean.attach( arguments.data );
+		local.dataForIterator = arguments.data;
+		if ( len(trim(arguments.method)) ) {
+			arguments.args.name = local.bean.type();
+			local.dataForIterator = invoke( local.bean, arguments.method, arguments.args );
+		}
+		local.bean.attach( local.dataForIterator );
 		return local.bean;
+	}
+
+	public any function findByKeys( string name, struct args = {}, string format = "arrayOfStructs", array orderBy = [] ) {
+		local.result = variables.baseDAO.findByKeys( name = arguments.name, args = arguments.args, orderBy = arguments.orderBy );
+
+		if ( arguments.format IS "iterator" ) {
+			local.result = this.createIterator( name = arguments.name, data = local.result );
+		}
+
+		return local.result;
 	}
 
 	public void function injectBean( string beanName, struct scope ) {
