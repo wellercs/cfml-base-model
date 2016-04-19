@@ -21,7 +21,7 @@
 		return {};
 	}
 
-	public any function findByKeys( string name, struct args, string format = "arrayOfStructs", array orderBy = [] ) {
+	public any function findByKeys( string name, struct args = {} ) {
 		return retrieveData( name = arguments.name, fn = getFunctionCalledName(), values = arguments.args.values );
 	}
 
@@ -73,6 +73,10 @@
 		sproc.addProcResult(name="results");
 		results = sproc.execute().getProcResultSets().results;
 		return variables.datamapper.queryToResultSet( results );
+	}
+
+	public any function onMissingMethod( string missingMethodName, struct missingMethodArguments ) {
+		return retrieveData( name = arguments.missingMethodArguments.name, fn = arguments.missingMethodName, values = arguments.missingMethodArguments.values );
 	}
 
 }
