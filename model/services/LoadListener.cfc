@@ -54,6 +54,31 @@
 	                        datasource = "mydsn"
 	                    }
 	                }
+	            },
+	            getProductsByType = {
+	                MSSQL = {
+	                    sp = "pr_product_by_type_lst",
+	                    params = [
+	                        {
+	                            paramName = "store_group_id",
+	                            paramType = "in",
+	                            dataType = "integer"
+	                        },
+	                        {
+	                            paramName = "product_type_id",
+	                            paramType = "in",
+	                            dataType = "integer"
+	                        },
+	                        {
+	                            paramName = "label",
+	                            paramType = "in",
+	                            dataType = "varchar"
+	                        }
+	                    ],
+	                    options = {
+	                        datasource = "mydsn"
+	                    }
+	                }
 	            }
 	        }
 		} );	    
