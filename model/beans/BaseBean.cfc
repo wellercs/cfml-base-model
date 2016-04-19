@@ -17,34 +17,6 @@
 		return this;
 	}
 
-	// DATA ACCESS METHODS
-
-	public any function getByID( string name, any id ) {
-		if ( structKeyExists(variables.svc, getFunctionCalledName()) ) {
-			return invoke(variables.svc, getFunctionCalledName(), arguments);
-		} else {
-			return invoke(variables.dao, getFunctionCalledName(), arguments);
-		}
-	}
-
-	public any function findByKeys( string name = variables.name, struct args = {}, string format = "arrayOfStructs", array orderBy = [] ) {
-		// somehow losing arguments after invoke
-		local.myArgs = {};
-		structAppend( local.myArgs, arguments );
-
-		if ( structKeyExists(variables.svc, getFunctionCalledName()) ) {
-			local.result = invoke(variables.svc, getFunctionCalledName(), arguments);
-		} else {
-			local.result = invoke(variables.dao, getFunctionCalledName(), arguments);
-		}
-
-		if ( local.myArgs.format IS "iterator" ) {
-			local.result = variables.datamapper.createIterator( name = local.myArgs.name, data = local.result );
-		}
-
-		return local.result;
-	}
-
 	// STANDARD BEAN METHODS
 
 	public any function get( string propertyName ) {
@@ -127,8 +99,12 @@
 		return this;
 	}
 
-	public string function type() {
+	public string function name() {
 		return variables.name;
+	}
+
+	public string function type() {
+		return lcase(replaceNoCase(variables.name, "Bean", "", "one"));
 	}
 
 	public struct function getData() {
@@ -257,6 +233,17 @@
 		variables.data = { };
 		variables.loaded = arguments.loaded;
 		variables._cleanData();
-	}	
+	}
+
+	// ON MISSING METHOD
+
+	public any function onMissingMethod( string missingMethodName, struct missingMethodArguments ) {
+		arguments.missingMethodArguments.name = this.name();
+		if ( structKeyExists(variables.svc, arguments.missingMethodName) ) {
+			return invoke( variables.svc, arguments.missingMethodName, arguments.missingMethodArguments );
+		} else {
+			return invoke( variables.dao, arguments.missingMethodName, arguments.missingMethodArguments );
+		}
+	}
 
 }
