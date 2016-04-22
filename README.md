@@ -1,5 +1,5 @@
 # BaseBean-cfc
-CFML base bean with iteration functionality
+CFML base service, dao, and bean with iteration functionality and mapper.
 
 * How to override property with method
 * How to use custom service
