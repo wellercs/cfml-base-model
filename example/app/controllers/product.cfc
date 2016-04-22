@@ -36,6 +36,11 @@ component accessors="true" {
 		// rc.ProductBean = variables.DataMapper.createIterator( name = "ProductBean", data = variables.ProductService.getProducts() );
 
 		// rc.ProductBean = variables.DataMapper.createIterator( name = "ProductBean", method = "getProducts" );
+
+		// rc.ProductBean = variables.DataMapper.createIterator( name = "MyBean", method = "deprecatedFunction" );
+		// writedump(rc.ProductBean.getData());
+		// writedump(rc.ProductBean.getResultSet());
+		// abort;
 	}
 
 }

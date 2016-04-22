@@ -27,7 +27,7 @@
 
 	private any function retrieveData( required string name, required string fn, array values = [] ) {
 		local.useNOSQL = false;
-		local.results = "";
+		local.results = [];
 		local.stem = replaceNoCase(arguments.name, "Bean", "", "one");
 
 		if ( structKeyExists(variables.orm, local.stem) AND structKeyExists(variables.orm[local.stem], arguments.fn) ) {
@@ -76,7 +76,10 @@
 	}
 
 	public any function onMissingMethod( string missingMethodName, struct missingMethodArguments ) {
-		return retrieveData( name = arguments.missingMethodArguments.name, fn = arguments.missingMethodName, values = arguments.missingMethodArguments.values );
+		var args = { };
+		structAppend( args, arguments.missingMethodArguments );
+		args.fn = arguments.missingMethodName
+		return retrieveData( argumentCollection = args );
 	}
 
 }
