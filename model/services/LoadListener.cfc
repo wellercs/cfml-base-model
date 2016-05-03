@@ -5,6 +5,23 @@
 	}
 
 	public any function onLoad( beanFactory ) {
+		beanFactory.addBean( "beanVersions", {
+			"Product" = "1.1.0"
+		} );
+
+		for ( var beanStem in beanFactory.getBean("beanVersions") ) {
+			for ( var beanType in ["Service","DAO"] ) {
+				try {
+					var beanName = beanStem & beanType;
+					var beanVersion = beanFactory.getBean( "beanVersions" )[ beanStem ];
+					versionedBeanName = beanName & "_v" & replace( beanVersion, ".", "_", "all" );
+					beanFactory.addAlias( beanName, versionedBeanName );
+				} catch ( any e ) {
+					// ignore error
+				}
+			}
+		}
+
 		beanFactory.addBean( "orm", {
 	        product = {
 	            getByID = {
